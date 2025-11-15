@@ -1,85 +1,100 @@
+package com.yomu.model;
+
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
+
+
+ //  Entidade Indicação 
 
 public class Indicacao {
-
     
-    private Integer id;
-    private Integer remetenteId;
-    private Integer destinatarioId;
-    private Integer livroId;
+    private String id;
+    private String usuarioIndicadorId;
+    private String usuarioIndicadoId;
+    private String livroId;
     private String mensagem;
-    private Boolean lida;
-    private LocalDateTime dataEnvio;
-
+    private StatusIndicacao status;
+    private LocalDateTime dataIndicacao;
+    private LocalDateTime dataResposta;
     
     public Indicacao() {
+        this.id = UUID.randomUUID().toString();
+        this.dataIndicacao = LocalDateTime.now();
+        this.status = StatusIndicacao.PENDENTE;
     }
-
-    public Indicacao(Integer id, Integer remetenteId, Integer destinatarioId, Integer livroId,
-                     String mensagem, Boolean lida, LocalDateTime dataEnvio) {
-        this.id = id;
-        this.remetenteId = remetenteId;
-        this.destinatarioId = destinatarioId;
+    
+    public Indicacao(String usuarioIndicadorId, String usuarioIndicadoId, 
+                     String livroId, String mensagem) {
+        this();
+        this.usuarioIndicadorId = usuarioIndicadorId;
+        this.usuarioIndicadoId = usuarioIndicadoId;
         this.livroId = livroId;
         this.mensagem = mensagem;
-        this.lida = lida;
-        this.dataEnvio = dataEnvio;
     }
-
-    // Getters e Setters
-    public Integer getId() {
-        return id;
+    
+    
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+    
+    public String getUsuarioIndicadorId() { return usuarioIndicadorId; }
+    public void setUsuarioIndicadorId(String usuarioIndicadorId) { 
+        this.usuarioIndicadorId = usuarioIndicadorId; 
     }
-
-    public void setId(Integer id) {
-        this.id = id;
+    
+    public String getUsuarioIndicadoId() { return usuarioIndicadoId; }
+    public void setUsuarioIndicadoId(String usuarioIndicadoId) { 
+        this.usuarioIndicadoId = usuarioIndicadoId; 
     }
-
-    public Integer getRemetenteId() {
-        return remetenteId;
+    
+    public String getLivroId() { return livroId; }
+    public void setLivroId(String livroId) { this.livroId = livroId; }
+    
+    public String getMensagem() { return mensagem; }
+    public void setMensagem(String mensagem) { this.mensagem = mensagem; }
+    
+    public StatusIndicacao getStatus() { return status; }
+    public void setStatus(StatusIndicacao status) { this.status = status; }
+    
+    public LocalDateTime getDataIndicacao() { return dataIndicacao; }
+    public void setDataIndicacao(LocalDateTime dataIndicacao) { 
+        this.dataIndicacao = dataIndicacao; 
     }
-
-    public void setRemetenteId(Integer remetenteId) {
-        this.remetenteId = remetenteId;
+    
+    public LocalDateTime getDataResposta() { return dataResposta; }
+    public void setDataResposta(LocalDateTime dataResposta) { 
+        this.dataResposta = dataResposta; 
     }
-
-    public Integer getDestinatarioId() {
-        return destinatarioId;
+    
+    // Métodos de negócio
+    public void aceitar() {
+        this.status = StatusIndicacao.ACEITA;
+        this.dataResposta = LocalDateTime.now();
     }
-
-    public void setDestinatarioId(Integer destinatarioId) {
-        this.destinatarioId = destinatarioId;
+    
+    public void recusar() {
+        this.status = StatusIndicacao.RECUSADA;
+        this.dataResposta = LocalDateTime.now();
     }
-
-    public Integer getLivroId() {
-        return livroId;
+    
+    public boolean isPendente() {
+        return this.status == StatusIndicacao.PENDENTE;
     }
-
-    public void setLivroId(Integer livroId) {
-        this.livroId = livroId;
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Indicacao that = (Indicacao) o;
+        return Objects.equals(id, that.id);
     }
-
-    public String getMensagem() {
-        return mensagem;
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
-    public Boolean getLida() {
-        return lida;
-    }
-
-    public void setLida(Boolean lida) {
-        this.lida = lida;
-    }
-
-    public LocalDateTime getDataEnvio() {
-        return dataEnvio;
-    }
-
-    public void setDataEnvio(LocalDateTime dataEnvio) {
-        this.dataEnvio = dataEnvio;
+    
+    public enum StatusIndicacao {
+        PENDENTE, ACEITA, RECUSADA
     }
 }
